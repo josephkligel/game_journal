@@ -1,0 +1,29 @@
+Game Journal Project
+-----------------------------
+Description: A web where a user can add new games they like and record journal entries of
+	their last play session. Often times I play a game I really like but do not have a time
+	to finish it, so I put it down for several days to weeks and forget where I was or
+	what I was doing. The purpose of this app is to create log of the last thing I did
+	in the game and can refresh my memory before jumping into a new play session.
+
+Stack: Java Spring Boot
+
+Feature List:
+	> Project hosted on GitHub
+	> Gitignore file
+	> All CRUD features for journal entries
+	> CSS and bootstrap basic styling
+	> Data validation
+	> Login and registration w/ validations (index page)
+	> Protected routes (Must be logged in or registered to access other pages)
+
+GitHub Link: https://github.com/josephkligel/game_journal
+
+Backlog:
+	_ File upload
+	_ Make website responsive
+	_ Advanced stylizing of website
+	_ Add image uploading functionality to new game entry section (game art)
+	_ Add image uploading functionality to the journal entry section (screenshot of last
+		session)
+	_ Pagination and sorting
