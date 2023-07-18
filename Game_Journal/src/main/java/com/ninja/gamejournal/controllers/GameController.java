@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.ninja.gamejournal.models.Game;
 import com.ninja.gamejournal.services.GameService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -21,9 +22,20 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 	
+	public String checkAccess(HttpSession session, Model model, String webpage) {
+		// If user is logged send user to requested webpage
+		if(session.getAttribute("user") != null) {
+			model.addAttribute("user", session.getAttribute("user"));
+			model.addAttribute("games", gameService.allGames());
+			return webpage;
+		}
+		// If user is not logged in send user back to index page (login page)
+		return "redirect:/";
+	}
+	
 	@GetMapping("/games/add")
-	public String add(@ModelAttribute("game") Game game) {
-		return "gameAdd.jsp";
+	public String add(@ModelAttribute("game") Game game, HttpSession session, Model model) {
+		return checkAccess(session, model, "gameAdd.jsp");
 	}
 	
 	@PostMapping("/games/create")
@@ -39,15 +51,15 @@ public class GameController {
 	}
 	
 	@GetMapping("/games/{gameId}")
-	public String show(@PathVariable("gameId") Long gameId, Model model) {
+	public String show(@PathVariable("gameId") Long gameId, HttpSession session, Model model) {
 		model.addAttribute("game", gameService.findGame(gameId));
-		return "gameShow.jsp";
+		return checkAccess(session, model, "gameShow.jsp");
 	}
 	
 	@GetMapping("/games/edit/{gameId}")
-	public String edit(@PathVariable("gameId") Long gameId, Model model) {
+	public String edit(@PathVariable("gameId") Long gameId, HttpSession session, Model model) {
 		model.addAttribute("game", gameService.findGame(gameId));
-		return "gameEdit.jsp";
+		return checkAccess(session, model, "gameEdit.jsp");
 	}
 	
 	@PutMapping("/games/update")

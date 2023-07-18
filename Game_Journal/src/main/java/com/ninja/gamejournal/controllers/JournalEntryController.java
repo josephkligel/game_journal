@@ -25,10 +25,22 @@ public class JournalEntryController {
 	@Autowired
 	private GameService gameService;
 	
+	public String checkAccess(HttpSession session, Model model, String webpage) {
+		// If user is logged send user to requested webpage
+		if(session.getAttribute("user") != null) {
+			model.addAttribute("user", session.getAttribute("user"));
+			model.addAttribute("games", gameService.allGames());
+			model.addAttribute("journalEntries", journalEntryService.allJournalEntries());
+			return webpage;
+		}
+		// If user is not logged in send user back to index page (login page)
+		return "redirect:/";
+	}
+	
 	@GetMapping("/journal/add")
-	public String add(@ModelAttribute("journalEntry") JournalEntry journalEntry, Model model) {
+	public String add(@ModelAttribute("journalEntry") JournalEntry journalEntry, HttpSession session, Model model) {
 		model.addAttribute("games", gameService.allGames());
-		return "journalEntryAdd.jsp";
+		return checkAccess(session, model, "journalEntryAdd.jsp");
 	}
 	
 	@PostMapping("/journal/create")
@@ -44,14 +56,14 @@ public class JournalEntryController {
 	public String show(@PathVariable("journalEntryId") Long journalEntryId, Model model, HttpSession session) {
 		model.addAttribute("journalEntry", journalEntryService.findJournalEntry(journalEntryId));
 		model.addAttribute("user", session.getAttribute("user"));
-		return "journalEntryShow.jsp";
+		return checkAccess(session, model, "journalEntryShow.jsp");
 	}
 	
 	@GetMapping("/journal/edit/{journalEntryId}")
-	public String edit(@PathVariable("journalEntryId") Long journalEntryId, Model model) {
+	public String edit(@PathVariable("journalEntryId") Long journalEntryId, HttpSession session, Model model) {
 		model.addAttribute("journalEntry", journalEntryService.findJournalEntry(journalEntryId));
 		model.addAttribute("games", gameService.allGames());
-		return "journalEntryEdit.jsp";
+		return checkAccess(session, model, "journalEntryEdit.jsp");
 	}
 	
 	@PutMapping("/journal/update")
